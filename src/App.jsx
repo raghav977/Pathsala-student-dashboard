@@ -5,6 +5,8 @@ import './App.css'
 import {BrowserRouter,Routes,Route} from 'react-router-dom'
 import Firstinterface from './pages/Firstinterface'
 import Home from './pages/Home'
+import CourseDetails from './pages/CourseDetails'
+
 function App() {
   const [count, setCount] = useState(0)
 
@@ -14,6 +16,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Firstinterface/>}></Route>
         <Route path="/student/home" element={<Home/>}></Route> 
+        <Route path="/student/course/:id" element={<CourseDetails/>}></Route>
       </Routes>
       </BrowserRouter>
     </>

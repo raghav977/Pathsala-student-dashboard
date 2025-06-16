@@ -1,79 +1,80 @@
-import React from 'react'
+import React, { useState } from 'react';
 import { GiHamburgerMenu } from "react-icons/gi";
-import {Link} from 'react-router-dom'
-import {useState} from 'react';
-import { AnimatePresence, motion } from "motion/react"
-import logo from "../../assets/images/digitalpathsalalogo.png"
 import { IoIosCloseCircleOutline } from "react-icons/io";
+import { Link } from 'react-router-dom';
+import { AnimatePresence, motion } from "framer-motion"; // Corrected import
+import logo from "../../assets/images/digitalpathsalalogo.png";
 
 const Header = () => {
-    const [close,setClose]= useState(true);
-    const navbar_links = [
-  {
-    name: "Home",
-    link: "/home",
-  },
-  {
-    name: "Courses",
-    link: "/courses",
-  },
-  {
-    name: "Certification",
-    link: "/certification",
-  },
-];
+  const [isNavOpen, setIsNavOpen] = useState(false);
 
-    const [open,setOpen] = useState(true);
-    const handleNavbar = ()=>{
-        console.log("this is navbar");
-        setOpen(!open);
-    }
-    const handleClose=()=>{
-        setOpen(false);
-    }
+  const navbar_links = [
+    { name: "Home", link: "/home" },
+    { name: "Courses", link: "/courses" },
+    { name: "Certification", link: "/certification" },
+    {name:"Notices",link:"/notices"},
+    {name:"Assignment",link:"/assignment"},
+  ];
+
+  const handleNavbarToggle = () => {
+    setIsNavOpen(!isNavOpen);
+  };
+
+  const handleClose = () => {
+    setIsNavOpen(false);
+  };
+
   return (
-    <div className='bg-[#4CAF50] p-4 flex flex-row gap-6 items-center md:flex-row md:justify-between text-white relative'>
-        <div className='left flex gap-4 items-center cursor-pointer' onClick={handleNavbar}>
-            <GiHamburgerMenu className='text-3xl text-white'/>
-            <div>
-                <h1 className='text-2xl text-white cursor-pointer'>Logo</h1>
-            </div>
+    <div className="relative z-50">
+      {/* Header bar */}
+      <div className="bg-[#4CAF50] p-4 flex justify-between items-center text-white">
+        <div className="flex items-center gap-4 cursor-pointer" onClick={handleNavbarToggle}>
+          <GiHamburgerMenu className="text-3xl" />
+          <h1 className="text-2xl">Logo</h1>
         </div>
-        <div className='center'>
-            <h1 className='cursor-pointer text-xl'>DIGITAL PATHSALA</h1>
+        <h1 className="text-xl">DIGITAL PATHSALA</h1>
+        <Link className="text-xl">Logout</Link>
+      </div>
 
-        </div>
-        <div className='right text-xl'>
-            <Link>Logout</Link>
-        </div>
-        <AnimatePresence>
-  {open && (
-    <motion.div
-      initial={{ transform: "translateX(-100px)" }}
-      animate={{ transform: "translateX(0)" }}
-      exit={{ transform: "translateX(-100px)" }}
-      transition={{ duration: 0.65 }}
-      className="slidebar absolute w-[230px] top-0 focus:right left-0 bg-[#9664E3] shadow-lg p-4 h-screen z-100"
-    >
-        <IoIosCloseCircleOutline className="relative left-45 cursor-pointer text-3xl" onClick={handleClose}></IoIosCloseCircleOutline>
-      <ul className="flex flex-col space-y-4 items-center">
-        <img src={logo} className='w-[100px]'/>
-        <hr className='border w-full'></hr>
-        {navbar_links.map((item, index) => (
-          <li key={index} className="text-white text-lg font-medium">
-            <Link to={item.link} className="hover:text-grey-400 transition-colors duration-200">
-              {item.name}
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </motion.div>
-  )}
-</AnimatePresence>
-        
+      <AnimatePresence>
+        {isNavOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed top-0 left-0 w-full h-full backdrop-blur-sm bg-black/30 z-40"
+            onClick={handleClose} 
+          />
+        )}
+      </AnimatePresence>
 
+      {/* Sidebar menu */}
+      <AnimatePresence>
+        {isNavOpen && (
+          <motion.div
+            initial={{ x: "-100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "-100%" }}
+            transition={{ duration: 0.5 }}
+            className="fixed top-0 left-0 w-[230px] h-screen bg-[#4CAF50] shadow-lg p-4 z-50"
+          >
+            <IoIosCloseCircleOutline className="text-3xl cursor-pointer" onClick={handleClose} />
+            <ul className="flex flex-col space-y-4 items-center mt-4">
+              <img src={logo} className="w-[100px]" alt="logo" />
+              <hr className="border w-full" />
+              {navbar_links.map((item, index) => (
+                <li key={index} className="text-white text-lg font-medium">
+                  <Link to={item.link} onClick={handleClose}>
+                    {item.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;
